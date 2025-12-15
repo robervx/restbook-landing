@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>RestBook — Cobra más rápido, sin cambiar tu TPV</title>
+  <meta name="description" content="RestBook permite pagar y dividir la cuenta desde el móvil. El restaurante no cambia de TPV ni de banco: RestBook se integra y usa su Redsys." />
+
+  <style>
+    /*
+      RestBook Landing v2 (B2B restaurante)
+      - Menos texto, más eslogan + bloques claros
+      - Estética "restaurante clásico" (cálida, limpia, confiable)
+      - Responsive primero
+      - Animaciones sutiles (sin show-off)
+      - 1 solo archivo listo para hosting estático
+
+      NOTA: cambia email/teléfono/URL de formulario según tu caso.
+    */
+
+    :root{
+      --max: 1120px;
+      --pad: clamp(16px, 3.5vw, 28px);
+      --r: 22px;
+      --rs: 16px;
+
+      /* Paleta (clásica + premium) */
+      --sage-50: #f3f7f5;
+      --sage-100:#e7f1ec;
+      --sage-200:#d6e7df;
+      --sage-300:#b9d6c9;
+      --sage-600:#2c6a54;
+      --ink: #0d1412;
+      --muted:#4b5b55;
+      --line: rgba(13,20,18,.12);
+      --gold:#c9a227;
+
+      --shadow: 0 18px 50px rgba(0,0,0,.12);
+      --shadow2: 0 10px 30px rgba(0,0,0,.10);
+
+      --h1: clamp(34px, 5.5vw, 64px);
+      --h2: clamp(24px, 3.2vw, 40px);
+      --h3: clamp(18px, 2vw, 22px);
+      --p:  clamp(16px, 1.6vw, 18px);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color: var(--ink);
+      background: var(--sage-50);
+      line-height: 1.45;
+      overflow-x: clip;
+    }
+
+    a{color:inherit}
+
+    .wrap{max-width: var(--max); margin:0 auto; padding: 0 var(--pad)}
+
+    /* NAV */
+    .nav{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(243,247,245,.88);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+      padding: 14px 0;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight: 900;
+      text-decoration:none;
+      letter-spacing:.2px;
+    }
+    .logo{
+      width:34px; height:34px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 25%, var(--gold), transparent 60%),
+                  radial-gradient(circle at 70% 75%, var(--sage-300), transparent 55%),
+                  #103b2d;
+      box-shadow: 0 16px 40px rgba(16,59,45,.22);
+      border: 1px solid rgba(255,255,255,.45);
+    }
+    .links{display:flex; gap:14px; flex-wrap:wrap; align-items:center}
+    .links a{
+      text-decoration:none;
+      color: rgba(13,20,18,.70);
+      font-size: 14px;
+      padding: 8px 10px;
+      border-radius: 999px;
+    }
+    .links a:hover{background: rgba(13,20,18,.06)}
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding: 12px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(13,20,18,.18);
+      background: white;
+      box-shadow: var(--shadow2);
+      font-weight: 800;
+      text-decoration:none;
+      font-size: 14px;
+      white-space:nowrap;
+      gap: 10px;
+    }
+    .btn.primary{
+      background: linear-gradient(135deg, #103b2d, #1f5d47);
+      border-color: rgba(16,59,45,.35);
+      color: #fff;
+    }
+    .btn.primary:hover{filter: brightness(1.03)}
+    .btn.ghost{background: transparent; box-shadow:none}
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size: 12px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.75);
+      border: 1px solid rgba(13,20,18,.12);
+      color: rgba(13,20,18,.72);
+      white-space:nowrap;
+    }
+    .pill i{width:8px;height:8px;border-radius:999px;background: var(--gold)}
+
+    /* HERO */
+    header.hero{
+      position: relative;
+      padding: clamp(26px, 6vh, 70px) 0 18px;
+    }
+    .hero-card{
+      border-radius: var(--r);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.74)),
+        radial-gradient(circle at 10% 10%, rgba(201,162,39,.12), transparent 60%),
+        radial-gradient(circle at 90% 20%, rgba(44,106,84,.16), transparent 55%),
+        var(--sage-100);
+      border: 1px solid rgba(13,20,18,.10);
+      box-shadow: var(--shadow);
+      overflow: clip;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 18px;
+      padding: clamp(18px, 3vw, 30px);
+      align-items: center;
+    }
+    @media (max-width: 980px){
+      .hero-grid{grid-template-columns: 1fr}
+    }
+
+    .kicker{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      margin-bottom: 10px;
+    }
+
+    .h1{
+      margin: 0 0 10px;
+      font-size: var(--h1);
+      line-height: 1.03;
+      letter-spacing: -0.03em;
+    }
+    .h1 .gold{color: var(--gold)}
+
+    .sub{
+      margin: 0;
+      font-size: var(--p);
+      color: rgba(13,20,18,.72);
+      max-width: 62ch;
+    }
+
+    .cta{
+      display:flex; gap:12px; flex-wrap:wrap; align-items:center;
+      margin-top: 16px;
+    }
+
+    .trust{
+      display:flex; gap:12px; flex-wrap:wrap;
+      margin-top: 12px;
+      color: rgba(13,20,18,.62);
+      font-size: 13px;
+    }
+    .trust span{display:inline-flex; gap:8px; align-items:center}
+    .trust b{color: rgba(13,20,18,.86)}
+
+    /* Visual del hero (móvil + tarjeta) */
+    .hero-visual{
+      display:grid;
+      gap: 14px;
+      align-content: start;
+    }
+    .mock{
+      border-radius: var(--r);
+      border: 1px solid rgba(13,20,18,.12);
+      background: rgba(255,255,255,.72);
+      box-shadow: var(--shadow2);
+      overflow: clip;
+    }
+    .mock .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 12px 14px;
+      border-bottom: 1px dashed rgba(13,20,18,.18);
+      color: rgba(13,20,18,.70);
+      font-weight: 800;
+      font-size: 13px;
+    }
+    .mock .body{padding: 14px; display:grid; gap:10px}
+    .rowi{display:flex; justify-content:space-between; gap:10px; font-size: 14px}
+    .rowi small{color: rgba(13,20,18,.55)}
+    .total{border-top:1px dashed rgba(13,20,18,.18); padding-top:10px; font-weight: 950}
+
+    .chips{display:flex; gap:8px; flex-wrap:wrap}
+    .chip{
+      font-size: 12px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(16,59,45,.08);
+      border: 1px solid rgba(16,59,45,.16);
+      color: rgba(16,59,45,.95);
+      font-weight: 800;
+    }
+
+    /* SECCIONES */
+    section{padding: clamp(34px, 7vh, 86px) 0}
+    section h2{margin:0 0 10px; font-size: var(--h2); letter-spacing:-0.02em}
+    section p{margin:0; font-size: var(--p); color: rgba(13,20,18,.70); max-width: 78ch}
+
+    .grid2{display:grid; gap: 18px; grid-template-columns: 1fr 1fr; align-items: start}
+    @media (max-width: 980px){.grid2{grid-template-columns:1fr}}
+
+    .panel{
+      border-radius: var(--r);
+      border: 1px solid rgba(13,20,18,.10);
+      background: rgba(255,255,255,.78);
+      box-shadow: var(--shadow2);
+      overflow: clip;
+    }
+    .panel .in{padding: 20px}
+
+    .panel h3{margin:0 0 10px; font-size: var(--h3)}
+
+    /* Pasos */
+    .steps{display:grid; gap: 12px; margin-top: 12px}
+    .step{
+      display:flex; gap: 12px; align-items:flex-start;
+      padding: 14px;
+      border-radius: var(--rs);
+      border: 1px solid rgba(13,20,18,.10);
+      background: rgba(243,247,245,.75);
+    }
+    .n{
+      width: 28px; height: 28px;
+      border-radius: 10px;
+      display:grid; place-items:center;
+      background: var(--gold);
+      color: #0b0b10;
+      font-weight: 950;
+      flex: 0 0 auto;
+    }
+
+    /* Beneficios (cards) */
+    .cards{display:grid; gap: 12px; margin-top: 12px}
+    .card{
+      display:flex; gap:12px; align-items:flex-start;
+      padding: 14px;
+      border-radius: var(--rs);
+      border: 1px solid rgba(13,20,18,.10);
+      background: rgba(255,255,255,.80);
+    }
+    .ic{
+      width: 36px; height: 36px;
+      border-radius: 14px;
+      display:grid; place-items:center;
+      background: rgba(16,59,45,.10);
+      border: 1px solid rgba(16,59,45,.18);
+      color: rgba(16,59,45,.95);
+      font-weight: 950;
+      flex: 0 0 auto;
+    }
+
+    /* Confianza */
+    .badges{display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px}
+    .badge{
+      font-size: 13px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(13,20,18,.12);
+      color: rgba(13,20,18,.72);
+      font-weight: 800;
+    }
+
+    /* Form */
+    form{display:grid; gap: 10px; margin-top: 12px}
+    .fgrid{display:grid; gap: 10px; grid-template-columns: 1fr 1fr}
+    @media (max-width: 720px){.fgrid{grid-template-columns:1fr}}
+
+    label{font-size: 13px; color: rgba(13,20,18,.70); font-weight: 800}
+    input, textarea, select{
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(13,20,18,.16);
+      background: rgba(255,255,255,.92);
+      font: inherit;
+      outline: none;
+    }
+    input:focus, textarea:focus, select:focus{border-color: rgba(44,106,84,.45); box-shadow: 0 0 0 4px rgba(44,106,84,.12)}
+
+    textarea{min-height: 110px; resize: vertical}
+
+    .contactbar{
+      display:flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 12px;
+      color: rgba(13,20,18,.70);
+      font-size: 14px;
+    }
+    .contactbar a{
+      text-decoration:none;
+      font-weight: 900;
+      color: #103b2d;
+    }
+
+    footer{
+      border-top: 1px solid rgba(13,20,18,.10);
+      padding: 24px 0;
+      color: rgba(13,20,18,.62);
+      font-size: 14px;
+      background: rgba(255,255,255,.55);
+    }
+
+    /* Animaciones sutiles */
+    .reveal{opacity: 0; transform: translateY(10px)}
+    .reveal.in{opacity: 1; transform: translateY(0); transition: opacity .6s ease, transform .6s ease}
+
+    @media (prefers-reduced-motion: reduce){
+      html{scroll-behavior:auto}
+      .reveal, .reveal.in{opacity:1; transform:none; transition:none}
+    }
+
+    /* Móvil: esconder links */
+    @media (max-width: 520px){
+      .links{display:none}
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="nav" aria-label="Navegación">
+    <div class="wrap">
+      <div class="row">
+        <a class="brand" href="#top" aria-label="Ir a inicio">
+          <span class="logo" aria-hidden="true"></span>
+          <span>RestBook</span>
+        </a>
+
+        <div class="links">
+          <a href="#como">Cómo funciona</a>
+          <a href="#beneficios">Beneficios</a>
+          <a href="#confianza">Confianza</a>
+          <a href="#contacto">Contacto</a>
+        </div>
+
+        <a class="btn primary" href="#contacto">Solicitar demo</a>
+      </div>
+    </div>
+  </nav>
+
+  <header id="top" class="hero">
+    <div class="wrap">
+      <div class="hero-card">
+        <div class="hero-grid">
+          <div>
+            <div class="kicker">
+              <span class="pill"><i aria-hidden="true"></i>Sin cambiar TPV</span>
+              <span class="pill"><i aria-hidden="true"></i>Usa tu Redsys</span>
+              <span class="pill"><i aria-hidden="true"></i>Pago y división</span>
+            </div>
+
+            <h1 class="h1">Cobra más rápido.<br><span class="gold">Atiende mejor.</span></h1>
+            <p class="sub">
+              RestBook permite que el cliente pague y divida la cuenta desde el móvil.
+              Tú sigues trabajando igual: no cambias de TPV ni de banco.
+            </p>
+
+            <div class="cta">
+              <a class="btn primary" href="#contacto">Quiero una demo</a>
+              <a class="btn" href="#como">Ver cómo funciona</a>
+              <span class="pill">Pensado para hostelería clásica</span>
+            </div>
+
+            <div class="trust" aria-label="Mensajes de confianza">
+              <span>✅ <b>Compatible</b> con tu operativa</span>
+              <span>🔒 Pasarela <b>segura</b></span>
+              <span>📈 Datos para <b>decidir</b></span>
+            </div>
+          </div>
+
+          <div class="hero-visual" aria-label="Ejemplo visual">
+            <div class="mock reveal">
+              <div class="top"><span>Mesa 12</span><span class="pill">Tiempo real</span></div>
+              <div class="body">
+                <div class="rowi"><span>Entrante <small>x1</small></span><span>9,50 €</span></div>
+                <div class="rowi"><span>Principal <small>x2</small></span><span>28,00 €</span></div>
+                <div class="rowi"><span>Vino <small>x1</small></span><span>18,00 €</span></div>
+                <div class="rowi total"><span>Total</span><span>55,50 €</span></div>
+                <div class="chips">
+                  <span class="chip">Ana paga 15,00 €</span>
+                  <span class="chip">Mario paga 20,50 €</span>
+                  <span class="chip">Laura paga 20,00 €</span>
+                  <span class="chip">Cuenta cerrada</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel reveal">
+              <div class="in">
+                <h3 style="margin:0 0 6px">Lo que el dueño entiende</h3>
+                <p style="margin:0; color: rgba(13,20,18,.70)">
+                  Menos espera en el cobro → más rotación → más facturación.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="como">
+    <div class="wrap">
+      <h2>Cómo funciona (sin líos)</h2>
+      <p>Tres pasos. Lo importante: el restaurante no cambia su forma de trabajar.</p>
+
+      <div class="grid2" style="margin-top:16px">
+        <div class="panel reveal">
+          <div class="in">
+            <h3>Flujo en 3 pasos</h3>
+            <div class="steps">
+              <div class="step"><span class="n">1</span><div><b>El cliente escanea el QR</b><div style="color:rgba(13,20,18,.70)">Ve la cuenta en tiempo real.</div></div></div>
+              <div class="step"><span class="n">2</span><div><b>Paga o divide desde el móvil</b><div style="color:rgba(13,20,18,.70)">Por artículos, por partes o mixto.</div></div></div>
+              <div class="step"><span class="n">3</span><div><b>El TPV se actualiza</b><div style="color:rgba(13,20,18,.70)">Pagos parciales y cierre sin fricción.</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel reveal">
+          <div class="in">
+            <h3>Experiencia cliente (breve)</h3>
+            <div class="cards">
+              <div class="card"><span class="ic">QR</span><div><b>Sin esperar al camarero</b><div style="color:rgba(13,20,18,.70)">El pago no bloquea el servicio.</div></div></div>
+              <div class="card"><span class="ic">≡</span><div><b>Divide la cuenta</b><div style="color:rgba(13,20,18,.70)">Cada uno paga lo suyo. Fin de discusiones.</div></div></div>
+              <div class="card"><span class="ic">€</span><div><b>Propina digital</b><div style="color:rgba(13,20,18,.70)">Sugerida o libre. Queda registrada.</div></div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="beneficios">
+    <div class="wrap">
+      <h2>Beneficios para el restaurante</h2>
+      <p>Esto es lo que importa: tiempo, rotación, ingresos y control.</p>
+
+      <div class="grid2" style="margin-top:16px">
+        <div class="panel reveal">
+          <div class="in">
+            <h3>Operativa</h3>
+            <div class="cards">
+              <div class="card"><span class="ic">⏱️</span><div><b>Menos tiempo de cobro</b><div style="color:rgba(13,20,18,.70)">El cliente paga cuando está listo.</div></div></div>
+              <div class="card"><span class="ic">🔄</span><div><b>Más rotación de mesas</b><div style="color:rgba(13,20,18,.70)">Ganas turnos sin forzar al personal.</div></div></div>
+              <div class="card"><span class="ic">✅</span><div><b>Menos errores</b><div style="color:rgba(13,20,18,.70)">División clara, pagos controlados.</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel reveal">
+          <div class="in">
+            <h3>Datos (sin complicarse)</h3>
+            <div class="cards">
+              <div class="card"><span class="ic">📈</span><div><b>Ticket medio y propina</b><div style="color:rgba(13,20,18,.70)">Lo ves por día/semana/mes.</div></div></div>
+              <div class="card"><span class="ic">👥</span><div><b>Clientes recurrentes</b><div style="color:rgba(13,20,18,.70)">Frecuencia y gasto medio (RGPD).</div></div></div>
+              <div class="card"><span class="ic">🧾</span><div><b>Cierre más claro</b><div style="color:rgba(13,20,18,.70)">Pagos, métodos y propinas en un sitio.</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="confianza">
+    <div class="wrap">
+      <h2>Confianza para el dueño (sin sorpresas)</h2>
+      <p>RestBook no te pide que cambies tu casa. Se adapta.</p>
+
+      <div class="panel reveal" style="margin-top:16px">
+        <div class="in">
+          <div class="badges" aria-label="Puntos de confianza">
+            <span class="badge">Mantén tu TPV</span>
+            <span class="badge">Mantén tu banco</span>
+            <span class="badge">Usa tu Redsys</span>
+            <span class="badge">Cumplimiento RGPD</span>
+            <span class="badge">Soporte y acompañamiento</span>
+          </div>
+          <p style="margin-top:12px">
+            Si ya cobras con tarjeta y tienes TPV, podemos integrarnos. El objetivo es simple: cobrar sin esperas y convertir el cobro en información útil.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto">
+    <div class="wrap">
+      <h2>Solicitar demo</h2>
+      <p>Rellena el formulario y te contactamos. Si lo prefieres, también puedes llamar o escribir.</p>
+
+      <div class="grid2" style="margin-top:16px">
+        <div class="panel reveal">
+          <div class="in">
+            <h3>Formulario</h3>
+
+            <!--
+              OPCIONES DE ENVÍO:
+              1) Formspree (fácil): action="https://formspree.io/f/TU_ID"
+              2) Netlify Forms: añade attribute netlify y method POST
+              3) Backend propio: action="/api/lead"
+
+              Ahora lo dejo con mailto como fallback (funciona sin backend, pero es menos profesional).
+            -->
+            <form action="mailto:demo@restbook.app" method="post" enctype="text/plain">
+              <div class="fgrid">
+                <div>
+                  <label for="nombre">Nombre</label>
+                  <input id="nombre" name="Nombre" placeholder="Tu nombre" required />
+                </div>
+                <div>
+                  <label for="rest">Restaurante</label>
+                  <input id="rest" name="Restaurante" placeholder="Nombre del local" required />
+                </div>
+              </div>
+
+              <div class="fgrid">
+                <div>
+                  <label for="tel">Teléfono</label>
+                  <input id="tel" name="Telefono" placeholder="+34 …" inputmode="tel" required />
+                </div>
+                <div>
+                  <label for="email">Email</label>
+                  <input id="email" name="Email" placeholder="tu@email.com" type="email" required />
+                </div>
+              </div>
+
+              <div>
+                <label for="tpv">TPV (opcional)</label>
+                <select id="tpv" name="TPV">
+                  <option value="">Selecciona…</option>
+                  <option>HostelTáctil</option>
+                  <option>Ágora</option>
+                  <option>Revo</option>
+                  <option>Otro / No lo sé</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="msg">Mensaje (opcional)</label>
+                <textarea id="msg" name="Mensaje" placeholder="Ciudad, nº de mesas, horarios…"></textarea>
+              </div>
+
+              <button class="btn primary" type="submit">Enviar solicitud</button>
+              <div style="color:rgba(13,20,18,.55); font-size:13px; margin-top:8px">
+                Nota: este envío usa tu cliente de correo. Para un envío profesional sin depender del correo, cambia el <b>action</b> a Formspree/Netlify.
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="panel reveal">
+          <div class="in">
+            <h3>Contacto directo</h3>
+            <p style="margin:0; color:rgba(13,20,18,.70)">
+              Para restaurantes clásicos funciona mejor lo directo. Aquí lo tienes.
+            </p>
+
+            <div class="contactbar" aria-label="Datos de contacto">
+              <span>📩 <a href="mailto:demo@restbook.app">demo@restbook.app</a></span>
+              <span>📞 <a href="tel:+34600000000">+34 600 000 000</a></span>
+            </div>
+
+            <div class="panel" style="margin-top:14px">
+              <div class="in">
+                <h3 style="margin:0 0 6px">Mensaje final</h3>
+                <p style="margin:0; color:rgba(13,20,18,.70)">
+                  “Cobra sin esperas. Mantén tu TPV. Gana rotación.”
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap" style="display:flex; gap:12px; flex-wrap:wrap; justify-content:space-between; align-items:center;">
+      <div>© <span id="y"></span> RestBook · Todos los derechos reservados</div>
+      <div style="display:flex; gap:14px; flex-wrap:wrap">
+        <a href="#" style="color:rgba(13,20,18,.62); text-decoration:none">Privacidad</a>
+        <a href="#" style="color:rgba(13,20,18,.62); text-decoration:none">Términos</a>
+        <a href="#contacto" style="color:rgba(13,20,18,.62); text-decoration:none">Contacto</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Año + reveal sutil (JS mínimo)
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    const els = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries)=>{
+      for (const e of entries){
+        if (e.isIntersecting) e.target.classList.add('in');
+      }
+    }, {threshold: 0.12});
+    els.forEach(el=>io.observe(el));
+  </script>
+</body>
+</html>
